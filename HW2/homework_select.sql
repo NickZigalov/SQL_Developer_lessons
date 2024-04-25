@@ -157,7 +157,7 @@ select top 10
 from [Sales].[Orders] o
 	left join [Sales].[Customers] c on o.CustomerID = c.CustomerID
 	left join Application.People p on o.SalespersonPersonID = p.PersonID
-order by o.OrderDate desc, o.OrderID desc
+order by o.OrderDate desc, o.OrderID desc;
 
 
 
@@ -175,5 +175,5 @@ from [Sales].[Orders] o
 	left join [Sales].[OrderLines] ol on o.OrderID = ol.OrderID
 	left join Warehouse.StockItems si on ol.StockItemID = si.StockItemID and si.StockItemName = 'Chocolate frogs 250g'
 	left join [Sales].[Customers] c on o.CustomerID = c.CustomerID
-order by CustomerName
+order by CustomerName;
 
