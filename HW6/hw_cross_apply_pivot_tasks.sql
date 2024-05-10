@@ -41,11 +41,11 @@ InvoiceMonth | Peeples Valley, AZ | Medicine Lodge, KS | Gasport, NY | Sylvanite
 
 select 
 	MonthStart, 
-	[Sylvanite, MT],
-	[Peeples Valley, AZ],
-	[Medicine Lodge, KS],
-	[Gasport, NY],
-	[Jessie, ND]  
+	SUM([Sylvanite, MT]) as [Sylvanite, MT],
+	SUM([Peeples Valley, AZ]) as [Peeples Valley, AZ],
+	SUM([Medicine Lodge, KS]) as [Medicine Lodge, KS],
+	SUM([Gasport, NY]) as [Gasport, NY],
+	SUM([Jessie, ND] ) as  [Jessie, ND]
 from
 (
 		select  
@@ -71,7 +71,7 @@ count(invoiceid) for CustDist in (
 									)
 )
 as PivotTable
-
+GROUP BY MonthStart
 /*
 2. Для всех клиентов с именем, в котором есть "Tailspin Toys"
 вывести все адреса, которые есть в таблице, в одной колонке.
