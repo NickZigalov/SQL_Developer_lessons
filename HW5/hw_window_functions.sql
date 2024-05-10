@@ -136,13 +136,14 @@ ORDER BY [Period], GoodsCount desc
 SELECT	
 	[StockItemID]
 	,[StockItemName]
+	,[Brand]
 	,[UnitPrice]
-	,lnum
 	,TotalGoodsCount
 	,count([StockItemName]) over(order by lnum) as lnumGoodsCount
 FROM
 	(SELECT  [StockItemID]
       ,[StockItemName]
+	  ,Brand
       ,[UnitPrice]
 	  ,dense_rank () over ( order by LEFT([StockItemName],1)) as lnum
 	  ,(select count([StockItemName]) from [Warehouse].[StockItems]) AS TotalGoodsCount
@@ -156,7 +157,8 @@ FROM
 SELECT  [StockItemID]
 	  ,lead([StockItemID],1) over ( order by [StockItemName]) as NextStockId
 	  ,lag([StockItemID],1) over ( order by [StockItemName]) as PrevStockId
-      ,[StockItemName]	  
+      ,[StockItemName]
+	  ,[Brand]
 	  ,CASE 
 		WHEN lag([StockItemName],2) over(order by [StockItemName]) IS NULL THEN 'No items' 
 		ELSE lag([StockItemName],2) over(order by [StockItemName]) END as PrevName
