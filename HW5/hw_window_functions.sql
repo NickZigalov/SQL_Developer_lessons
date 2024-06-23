@@ -38,46 +38,31 @@ USE WideWorldImporters
 Нарастающий итог должен быть без оконной функции.
 */
 
---set statistics time, io on;
 
 with t as (
 SELECT  
-	i.InvoiceID, i.CustomerID, c.CustomerName, i.InvoiceDate, SUM(il.UnitPrice*il.Quantity) as InvoiceSaleSum,
-	(
-	SELECT SUM(il2.UnitPrice*il2.Quantity)  
-	FROM [Sales].[Invoices] i2
-	JOIN [Sales].[InvoiceLines] il2 on i2.InvoiceID = il2.InvoiceID
-	WHERE i2.CustomerID = i.CustomerID and EOMONTH(i.InvoiceDate)=EOMONTH(i2.InvoiceDate)
-	GROUP BY EOMONTH(i2.InvoiceDate)
-	) as TotalMonthSaleSum
+	i.InvoiceID, i.CustomerID, c.CustomerName, i.InvoiceDate, SUM(il.UnitPrice*il.Quantity) as InvoiceSaleSum
 FROM 
 	[Sales].[Invoices] i
 JOIN [Sales].[InvoiceLines] il on i.InvoiceID = il.InvoiceID
 JOIN [Sales].[Customers] c on i.CustomerID = c.CustomerID
 WHERE 
 	i.InvoiceDate >= '2015-01-01'
-	and	i.CustomerID = 4
 GROUP BY 
 	i.InvoiceID, i.CustomerID, c.CustomerName, i.InvoiceDate
---ORDER BY i.InvoiceDate
 ),
 t1 as (
-	select *,
-	(select SUM(Tsum)  from 
-						(select CustomerID, EOMONTH(InvoiceDate) InvoiceDate, AVG(TotalMonthSaleSum) as TSum 
-						from t
-						group by CustomerID, EOMONTH(InvoiceDate)) q1  where q.CustomerID = q1.CustomerID and EOMONTH(q.InvoiceDate) >= EOMONTH(q1.InvoiceDate)) as TQSum
-	from 
-			(select CustomerID, EOMONTH(InvoiceDate) InvoiceDate, AVG(TotalMonthSaleSum) as TSum 
-			from t
-			group by CustomerID, EOMONTH(InvoiceDate)) q
-
+	SELECT EOMONTH(InvoiceDate) as InvoiceDate, SUM(InvoiceSaleSum) as TQSum
+	FROM t
+	GROUP BY EOMONTH(InvoiceDate)
 )
+
 SELECT t.InvoiceID, t.CustomerName, t.InvoiceDate, t.InvoiceSaleSum, t1.TQSum as [Нарастающий итог по месяцу]
 FROM t
-JOIN t1 on t.CustomerID = t1.CustomerID and EOMONTH(t.InvoiceDate) = EOMONTH(t1.InvoiceDate)
-ORDER BY t.CustomerID, t.InvoiceDate
+JOIN t1 on EOMONTH(t.InvoiceDate) = EOMONTH(t1.InvoiceDate)
+ORDER BY t.InvoiceDate
 ;
+
 	
 /*
 2. Сделайте расчет суммы нарастающим итогом в предыдущем запросе с помощью оконной функции.
@@ -92,16 +77,15 @@ FROM
 JOIN [Sales].[InvoiceLines] il on i.InvoiceID = il.InvoiceID
 JOIN [Sales].[Customers] c on i.CustomerID = c.CustomerID
 WHERE 
-	i.InvoiceDate >= '2015-01-01' and 
-	i.CustomerID = 4
+	i.InvoiceDate >= '2015-01-01'  
 GROUP BY 
 	i.InvoiceID, i.CustomerID, c.CustomerName, i.InvoiceDate
 )
 SELECT 
-	InvoiceID, CustomerName, InvoiceDate, 
-	SUM(InvoiceSaleSum) OVER (PARTITION BY CustomerID ORDER BY EOMONTH(InvoiceDate)) as TotalMonthSaleSum
+	InvoiceID, CustomerName, InvoiceDate, InvoiceSaleSum,
+	SUM(InvoiceSaleSum) OVER (PARTITION BY EOMONTH(InvoiceDate) ORDER BY EOMONTH(InvoiceDate)) as TotalMonthSaleSum
 FROM a
-ORDER BY CustomerID, InvoiceDate
+ORDER BY InvoiceDate
 
 
 
