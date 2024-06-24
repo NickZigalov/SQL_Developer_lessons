@@ -50,19 +50,24 @@ WHERE
 	i.InvoiceDate >= '2015-01-01'
 GROUP BY 
 	i.InvoiceID, i.CustomerID, c.CustomerName, i.InvoiceDate
+
 ),
 t1 as (
-	SELECT EOMONTH(InvoiceDate) as InvoiceDate, SUM(InvoiceSaleSum) as TQSum
-	FROM t
-	GROUP BY EOMONTH(InvoiceDate)
+
+		SELECT q.*, 
+			(SELECT SUM(Tum) FROM
+					(SELECT EOMONTH(t.InvoiceDate) as InvoiceDate, SUM(t.InvoiceSaleSum) as Tum 
+					FROM t GROUP BY EOMONTH(t.InvoiceDate)
+					 ) q1
+			 WHERE  q.InvoiceDate >= q1.InvoiceDate) as TQSum
+		FROM 
+		(SELECT EOMONTH(t.InvoiceDate) as InvoiceDate, SUM(t.InvoiceSaleSum) as TSum FROM t GROUP BY EOMONTH(t.InvoiceDate)) q
 )
 
-SELECT t.InvoiceID, t.CustomerName, t.InvoiceDate, t.InvoiceSaleSum, t1.TQSum as [Нарастающий итог по месяцу]
+SELECT t.*, t1.TQSum as [Нарастающий итог по месяцу]
 FROM t
-JOIN t1 on EOMONTH(t.InvoiceDate) = EOMONTH(t1.InvoiceDate)
-ORDER BY t.InvoiceDate
-;
-
+JOIN t1 on EOMONTH(t.InvoiceDate) = t1.InvoiceDate
+ORDER BY EOMONTH(t.InvoiceDate)
 	
 /*
 2. Сделайте расчет суммы нарастающим итогом в предыдущем запросе с помощью оконной функции.
@@ -83,7 +88,7 @@ GROUP BY
 )
 SELECT 
 	InvoiceID, CustomerName, InvoiceDate, InvoiceSaleSum,
-	SUM(InvoiceSaleSum) OVER (PARTITION BY EOMONTH(InvoiceDate) ORDER BY EOMONTH(InvoiceDate)) as TotalMonthSaleSum
+	SUM(InvoiceSaleSum) OVER ( ORDER BY EOMONTH(InvoiceDate)) as TotalMonthSaleSum
 FROM a
 ORDER BY InvoiceDate
 
