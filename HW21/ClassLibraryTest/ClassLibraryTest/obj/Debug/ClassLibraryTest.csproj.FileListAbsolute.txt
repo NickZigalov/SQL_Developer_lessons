@@ -1,0 +1,6 @@
+C:\Users\Kolya\source\repos\ClassLibraryTest\ClassLibraryTest\bin\Debug\ClassLibraryTest.dll
+C:\Users\Kolya\source\repos\ClassLibraryTest\ClassLibraryTest\bin\Debug\ClassLibraryTest.pdb
+C:\Users\Kolya\source\repos\ClassLibraryTest\ClassLibraryTest\obj\Debug\ClassLibraryTest.csproj.AssemblyReference.cache
+C:\Users\Kolya\source\repos\ClassLibraryTest\ClassLibraryTest\obj\Debug\ClassLibraryTest.csproj.CoreCompileInputs.cache
+C:\Users\Kolya\source\repos\ClassLibraryTest\ClassLibraryTest\obj\Debug\ClassLibraryTest.dll
+C:\Users\Kolya\source\repos\ClassLibraryTest\ClassLibraryTest\obj\Debug\ClassLibraryTest.pdb
