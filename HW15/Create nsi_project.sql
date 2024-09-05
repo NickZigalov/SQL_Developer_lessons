@@ -1,0 +1,21 @@
+USE [OP_ODS]
+GO
+
+/****** Object:  Table [nsi].[ref_project]    Script Date: 9/6/2024 12:24:03 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [nsi].[ref_project](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[project] [nvarchar](255) NULL,
+ CONSTRAINT [PK_projectTypeID] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+
