@@ -3,7 +3,7 @@ use WideWorldImporters
 --создаю копию таблицы для анализа
 --select * into [WideWorldImporters].[Sales].[OrdersWithPartitions] from [WideWorldImporters].[Sales].[Orders]
 
---создаю новую файловую группу и прописываю путь к ней
+--создаю новую файловую группу и прописываю путь к файлу
 alter database [WideWorldImporters] add filegroup YearPartition
 go
 alter database [WideWorldImporters]
